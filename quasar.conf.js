@@ -61,7 +61,8 @@ module.exports = function (ctx) {
         'QDialog',
         'QField',
         'QDate',
-        'QPopupProxy'
+        'QPopupProxy',
+        'QAvatar'
       ],
 
       directives: [

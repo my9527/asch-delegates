@@ -1,7 +1,10 @@
 <template>
   <q-page class="flex column">
     <q-card style="margin-top: 20px;">
-      <img width="100%" v-bind:src="info.banner">
+      <img v-if="!!info.banner" width="100%" v-bind:src="info.banner">
+      <a v-else href="https://asch.io" target="_blank">
+        <img width="100%" src="/statics/banner.jpg">
+      </a>
       <q-markup-table separator="vertical">
         <tr>
           <td class="attr-key">Name</td>
@@ -127,7 +130,7 @@ export default {
         votesRatio: '9.8%',
         profits: 543543,
         address: 'ABuH9VHV3cFi9UKzcHXGMPGnSC4QqT2cZ5',
-        banner: '/statics/banner.jpg',
+        banner: '',
         website: 'https://asch.io',
         intro:
           'The asch core team powered by our mathematically optimal network.'
@@ -181,7 +184,7 @@ export default {
           profits: this.$asch.fromSatoshi(d.rewards + d.fees),
           address: d.address,
           website: d.profile ? d.profile.website : '--',
-          banner: d.profile ? d.profile.banner : '/statics/banner.jpg',
+          banner: d.profile.banner,
           intro: d.profile ? d.profile.intro : '--'
         }
       })

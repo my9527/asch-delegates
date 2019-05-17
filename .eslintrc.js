@@ -34,7 +34,7 @@ module.exports = {
     'prefer-promise-reject-errors': 'off',
     semi: [2, 'never'],
     quotes: ['error', 'single'],
-    'max-len': ['error', { code: 120 }],
+    'max-len': ['off', { code: 120 }],
 
     // allow console.log during development only
     'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',

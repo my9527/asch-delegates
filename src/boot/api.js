@@ -27,6 +27,10 @@ class ExplorerAPI {
     return this.get('/api/accounts/delegates', { address })
   }
 
+  async getVotingSummary() {
+    return this.get('/api/v2/misc/votingSummary', {})
+  }
+
   async get(url, params) {
     return this.handleError(this.client.get(url, { params }))
   }

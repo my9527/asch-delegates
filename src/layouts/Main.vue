@@ -2,7 +2,9 @@
   <q-layout view="hhh Lpr fff">
     <q-header class="dark-bg" elevated>
       <q-toolbar class="q-pr-none">
-        <q-btn flat dense round @click="leftDrawerOpen = !leftDrawerOpen" icon="menu"></q-btn>
+        <q-avatar>
+          <img src="/statics/favicon.ico">
+        </q-avatar>
         <q-toolbar-title shrink>Asch Delegates</q-toolbar-title>
 
         <q-btn
@@ -19,7 +21,7 @@
 
         <q-space/>
 
-        <q-btn-dropdown stretch flat v-bind:label="currentLang">
+        <!-- <q-btn-dropdown stretch flat v-bind:label="currentLang">
           <q-list>
             <q-item
               v-for="item of languages"
@@ -33,22 +35,29 @@
               </q-item-section>
             </q-item>
           </q-list>
-        </q-btn-dropdown>
+        </q-btn-dropdown>-->
       </q-toolbar>
     </q-header>
 
     <q-page-container>
+      <div v-if="!aschPayInstalled" style="width: 100%; text-align: center">
+        <a
+          target="blank"
+          href="https://chrome.google.com/webstore/detail/aschpay/eibepfonpdkkelekmahbbhcfkeijlpop"
+        >Clear here to install AschPay wallet</a>
+      </div>
+
       <router-view/>
     </q-page-container>
 
     <div class="footer q-gutter-lg">
       <span>Copyright @2019</span>
       <a class="col" href="https://asch.io">Asch</a>
-      <a class="col" href="https://asch.io">Github</a>
-      <a class="col" href="https://asch.io">Mainnet</a>
-      <a class="col" href="https://asch.io">Explorer</a>
-      <a class="col" href="https://asch.io">Twitter</a>
-      <a class="col" href="https://asch.io">Medium</a>
+      <a class="col" href="https://github.com/AschPlatform">Github</a>
+      <a class="col" href="https://mainnet.asch.io">Mainnet</a>
+      <a class="col" href="https://explorer.asch.io">Explorer</a>
+      <a class="col" href="https://twitter.com">Twitter</a>
+      <a class="col" href="https://medium.com">Medium</a>
     </div>
   </q-layout>
 </template>
@@ -99,12 +108,13 @@ export default {
       currentLang: 'English',
       navigations: [
         { label: 'Vote', to: '/' },
-        { label: 'Bonus', to: '/bonus' },
-        { label: 'News', to: '/news' },
         { label: 'Register', to: '/register' },
+        // { label: 'Bonus', to: '/bonus' },
+        // { label: 'News', to: '/news' },
         { label: 'Help', to: '/help' }
       ],
-      currentPage: 'Vote'
+      currentPage: 'Vote',
+      aschPayInstalled: true,
     }
   },
   methods: {
@@ -120,13 +130,25 @@ export default {
       this.currentPage = item.label
     },
     initAscPay() {
-      const interval = setInterval(() => {
-        if (window.aschPay && window.aschPay.ready) {
-          console.log('window.aschPay is ready')
-          clearInterval(interval)
-          this.$asch.setAschPay(window.aschPay)
+      const checkAschPay = () => {
+        if (!window.aschPay) {
+          return
         }
-      }, 100)
+        if (!window.aschPay.ready) {
+          return
+        }
+        console.log('window.aschPay is ready')
+        clearInterval(interval)
+        this.$asch.setAschPay(window.aschPay)
+      }
+      checkAschPay()
+      const interval = setInterval(checkAschPay, 100)
+
+      setTimeout(() => {
+        if (!window.aschPay) {
+          this.aschPayInstalled = false
+        }
+      }, 2000)
     }
   },
   mounted() {

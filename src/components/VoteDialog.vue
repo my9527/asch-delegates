@@ -8,21 +8,20 @@
       </q-card-section>
       <q-card-section>
         <br>
-        <template v-if="voteTarget === votedDelegate">
-          <div>
-            You have voted this delegate:
-            <span>{{voteTarget}}.</span><br>
-            <span>You can not vote it again.</span>
-          </div>
-        </template>
-        <template v-else-if="power === 0">
-          <div>You have no vote power. You may lock your XAS to obtain some.</div>
-        </template>
-        <template v-else>
-          <div>You will vote the delegate: <span>{{voteTarget}}</span></div>
-          <div>The operation will increase {{power}} votes for your voted delegate.</div>
-          <div>The operation will cost 0.1 XAS or equivalent NET resources.</div>
-        </template>
+        <div>
+          <span>You will vote the delegate:</span>
+          <span class="keyword">{{voteTarget}}</span>
+        </div>
+        <div>
+          <span>The operation will increase</span>
+          <span class="keyword">{{power}}</span>
+          <span>votes for your voted delegate.</span>
+        </div>
+        <div>
+          <span>The operation will cost you</span>
+          <span class="keyword">0.1</span>
+          <span>XAS or equivalent NET resources.</span>
+        </div>
       </q-card-section>
 
       <q-card-actions align="center">
@@ -35,6 +34,11 @@
 <style lang="stylus" scoped>
 .dialog-title {
   background: $secondary;
+}
+
+.keyword {
+  font-weight: bold;
+  margin: 0 5px 0 5px;
 }
 </style>
 
@@ -64,10 +68,12 @@ export default {
     },
     async onSubmit() {
       this.showDialog = false
-      if (this.voteTarget !== this.votedDelegate && this.power > 0) {
-
+      try {
+        await this.$asch.vote(this.voteTarget)
+      } catch(e) {
+        console.error('failed to submit vote transaction', e)
       }
-    },
+    }
   },
   mounted() {}
 }

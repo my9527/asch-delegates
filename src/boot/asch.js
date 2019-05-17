@@ -42,7 +42,7 @@ class Asch {
   async setAschPay(aschPay) {
     console.log('entry setAschPay')
     this.aschPay = aschPay
-    this.account = aschPay.defaultAccount
+    this.account = Object.assign({}, aschPay.defaultAccount)
     this.AschWeb = aschPay.AschWeb
     this._contract = await aschPay.createContractFromName(this.contractName)
     this._contract.gasLimit = this.gasLimit
@@ -51,6 +51,7 @@ class Asch {
     console.log('contract', this._contract)
     this.ready = true
     this.emit('ready')
+    setInterval(this.checkAccountChange.bind(this), 1000)
   }
 
   on(event, handler) {
@@ -87,20 +88,32 @@ class Asch {
 
   async setAccountName(name) {
     const trs = this.AschWeb.TransactionBuilder.setName(name)
-    const signedTrs = await this.sign(trs)
-    return this.aschPay.api.broadcastTransaction(signedTrs)
+    return this.signedAndBroadcast(trs)
   }
 
   async registerDelegate() {
     const trs = this.AschWeb.TransactionBuilder.registerDelegate()
-    const signedTrs = await this.sign(trs)
-    return this.aschPay.api.broadcastTransaction(signedTrs)
+    return this.signedAndBroadcast(trs)
   }
 
   async lock(height, amount) {
     const trs = this.AschWeb.TransactionBuilder.setLock(height, amount)
-    const signedTrs = await this.sign(trs)
-    return this.aschPay.api.broadcastTransaction(signedTrs)
+    return this.signedAndBroadcast(trs)
+  }
+
+  async unlock() {
+    const trs = this.AschWeb.TransactionBuilder.unlock()
+    return this.signedAndBroadcast(trs)
+  }
+
+  async vote(delegate) {
+    const trs = this.AschWeb.TransactionBuilder.voteDelegates([delegate])
+    return this.signedAndBroadcast(trs)
+  }
+
+  async unvote(delegate) {
+    const trs = this.AschWeb.TransactionBuilder.cleanVote([delegate])
+    return this.signedAndBroadcast(trs)
   }
 
   async sign(trs) {
@@ -112,9 +125,9 @@ class Asch {
     })
   }
 
-  getTransactionId(trx) {
-    const id = this.AschWeb.Utils.getId(trx)
-    return this.AschWeb.Utils.toHex(id)
+  async signedAndBroadcast(trs) {
+    const signedTrs = await this.sign(trs)
+    return this.aschPay.api.broadcastTransaction(signedTrs)
   }
 
   fromSatoshi(amount) {
@@ -133,6 +146,14 @@ class Asch {
   //============================================================================
   // Private
   //============================================================================
+  checkAccountChange() {
+    if (this.aschPay.defaultAccount.address !== this.account.address) {
+      const oldAccount = this.account
+      this.account = Object.assign({}, this.aschPay.defaultAccount)
+      this.emit('accountChanged', this.aschPay.defaultAccount, oldAccount)
+    }
+  }
+
   getFormedTime(timestamp) {
     let time = new Date(timestamp)
     let month = time.getMonth() + 1

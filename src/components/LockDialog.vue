@@ -85,18 +85,26 @@ export default {
       this.maxLockAmount = maxLockAmount
       this.currentHeight = currentHeight
       this.lastLockHeight = lastLockHeight
-      this.lockDate = date.formatDate(this.getMinLockTime() + 86400000, 'YYYY/MM/DD')
+      this.lockDate = date.formatDate(
+        this.getMinLockTime() + 86400000,
+        'YYYY/MM/DD'
+      )
       this.showDialog = true
     },
     async onSubmit() {
-      if (!this.$refs.amountInput.validate() || !this.$refs.dateInput.validate()) {
+      if (
+        !this.$refs.amountInput.validate() ||
+        !this.$refs.dateInput.validate()
+      ) {
         return
       }
 
       console.log('lock params', this.lockDate, this.lockAmount)
       const realAmount = this.$asch.toSatoshi(Number(this.lockAmount))
       const lockPeriod = new Date(this.lockDate) - Date.now()
-      const lockHeight = this.currentHeight + Math.floor(lockPeriod / constants.BLOCK_INTERVAL_MS)
+      const lockHeight =
+        this.currentHeight +
+        Math.floor(lockPeriod / constants.BLOCK_INTERVAL_MS)
       console.log('lock transaction args', realAmount, lockHeight)
       try {
         await this.$asch.lock(lockHeight, realAmount)
@@ -117,8 +125,13 @@ export default {
       this.$refs.datePicker.show()
     },
     getMinLockTime() {
-      const minLockHeight = Math.max(this.lastLockHeight, this.currentHeight) + constants.MIN_LOCK_INTERVAL
-      return Date.now() + (minLockHeight - this.currentHeight) * constants.BLOCK_INTERVAL_MS
+      const minLockHeight =
+        Math.max(this.lastLockHeight, this.currentHeight) +
+        constants.MIN_LOCK_INTERVAL
+      return (
+        Date.now() +
+        (minLockHeight - this.currentHeight) * constants.BLOCK_INTERVAL_MS
+      )
     }
   },
   mounted() {}

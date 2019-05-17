@@ -14,7 +14,7 @@
 
       <div class="text-weight-light">Vote Power:</div>
       <div>{{ votePower }}</div>
-      <q-btn label="unlock" color="secondary" :disable="votePower === 0"/>
+      <q-btn label="unlock" color="secondary" :disable="!canUnlock" @click="onUnlockClicked"/>
       <!-- <template v-if="isUnlockTimePassed">
 
       </template>
@@ -27,15 +27,22 @@
 
       <template v-if="votedDelegate !== ''">
         <div class="text-weight-light">Voted:</div>
-        <div>qingfeng</div>
+        <div>{{ votedDelegate }}</div>
       </template>
       <template v-else>
         <div class="text-weight-light">Not Voted</div>
       </template>
-      <q-btn label="Unvote" color="secondary" :disable="votedDelegate === ''"/>
+      <q-btn
+        label="Unvote"
+        color="secondary"
+        :disable="votedDelegate === ''"
+        @click="unOnvoteClicked"
+      />
     </div>
     <div class="banner">
-      <img src="/statics/banner.jpg" width="100%" height="100%">
+      <a href="https://asch.io" target="_blank">
+        <img src="/statics/banner.jpg" width="100%" height="100%">
+      </a>
     </div>
     <div class="dashboard dark-bg">
       <table>
@@ -45,25 +52,25 @@
               <span style="color: grey">Super Nodes</span>
               <br>
               <br>
-              <span>21</span>
+              <span>{{totalSuperNodes}}</span>
             </td>
             <td>
               <span style="color: grey">Total Delegates</span>
               <br>
               <br>
-              <span>699</span>
+              <span>{{totalDelegates}}</span>
             </td>
             <td>
               <span style="color: grey">Voted Coins</span>
               <br>
               <br>
-              <span>123,456,789</span>
+              <span>{{totalVotes}}</span>
             </td>
             <td>
               <span style="color: grey">Voted Accounts</span>
               <br>
               <br>
-              <span>11,230</span>
+              <span>{{votedAccounts}}</span>
             </td>
           </tr>
         </tbody>
@@ -219,7 +226,13 @@ export default {
           detailURL: '/delegate/iotex',
           address: 'ABuH9VHV3cFi9UKzcHXGMPGnSC4QqT2cZ5'
         }
-      ]
+      ],
+
+      // voting summary
+      totalSuperNodes: 0,
+      totalDelegates: 0,
+      totalVotes: 0,
+      votedAccounts: 0
     }
   },
   methods: {
@@ -261,6 +274,14 @@ export default {
     },
     onVoteClicked(item) {
       console.log('onVoteClicked...')
+      if (this.votePower === 0) {
+        alert('You have no vote power. You may lock your XAS to obtain some.')
+        return
+      }
+      if (this.votedDelegate === item.delegateName) {
+        alert('You have voted this delegate')
+        return
+      }
       this.$refs.voteDialog.show(
         'Voting',
         item.delegateName,
@@ -275,8 +296,32 @@ export default {
         this.$asch.cachedAccountInfo.lockHeight
       )
     },
+    async onUnlockClicked() {
+      if (this.unlockHeight > this.currentHeight) {
+        alert(
+          `You can not unlock your XAS before block height: ${
+            this.unlockHeight
+          }`
+        )
+        return
+      }
+      try {
+        await this.$asch.unlock()
+      } catch (e) {
+        console.error('failed to unlock', e)
+      }
+    },
+    async unOnvoteClicked() {
+      try {
+        await this.$asch.unvote(this.votedDelegate)
+      } catch (e) {
+        console.error('failed to unvote', e)
+      }
+    },
     async getAccountAndVotingInfo() {
-      await this.$asch.readyAsync()
+      if (!this.$asch.ready) {
+        await this.$asch.readyAsync()
+      }
       const address = this.$asch.defaultAccount.address
       const results = await Promise.all([
         this.$api.getAccount(address),
@@ -298,6 +343,24 @@ export default {
       if (delegate) {
         this.votedDelegate = delegate.name
       }
+    },
+    async getVotingSummary() {
+      try {
+        const result = await this.$api.getVotingSummary()
+        this.totalSuperNodes = result.votingSummary.totalSuperNodes
+        this.totalDelegates = result.votingSummary.totalDelegates
+        this.totalVotes = this.$asch
+          .fromSatoshi(result.votingSummary.totalVotes)
+          .toFixed(0)
+        this.votedAccounts = result.votingSummary.votedAccounts
+      } catch (e) {
+        console.error('failed to get voting summary', e)
+      }
+    },
+    refresh() {
+      this.getAccountAndVotingInfo()
+      this.getDelegates(1, this.pageSize)
+      this.getVotingSummary()
     }
   },
   computed: {
@@ -306,12 +369,19 @@ export default {
     },
     isUnlockTimePassed() {
       return true
+    },
+    canUnlock() {
+      return this.votePower > 0
     }
   },
   mounted() {
     console.log('===============Delegates page mounted==============')
-    this.getDelegates(1, this.pageSize)
-    this.getAccountAndVotingInfo()
+    this.refresh()
+    setInterval(() => this.refresh(), 10000)
+    this.$asch.on('accountChanged', (newAccount, oldAccount) => {
+      console.log('accountChanged:', newAccount.address, oldAccount.address)
+      this.getAccountAndVotingInfo()
+    })
   }
 }
 </script>
