@@ -1,3 +1,5 @@
+import { log } from '../utils'
+
 const GENESIS_TIME = new Date(Date.UTC(2016, 5, 27, 20, 0, 0, 0))
 
 class Asch {
@@ -40,15 +42,15 @@ class Asch {
   }
 
   async setAschPay(aschPay) {
-    console.log('entry setAschPay')
+    log('entry setAschPay')
     this.aschPay = aschPay
     this.account = Object.assign({}, aschPay.defaultAccount)
     this.AschWeb = aschPay.AschWeb
     this._contract = await aschPay.createContractFromName(this.contractName)
     this._contract.gasLimit = this.gasLimit
     this._contract.enablePayGasInXAS = this.enablePayGasInXAS
-    console.log('setAschPay', aschPay.defaultAccount)
-    console.log('contract', this._contract)
+    log('setAschPay', aschPay.defaultAccount)
+    log('contract', this._contract)
     this.ready = true
     this.emit('ready')
     setInterval(this.checkAccountChange.bind(this), 1000)

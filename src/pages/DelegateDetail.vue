@@ -72,7 +72,10 @@
         <q-btn color="secondary" label="Vote" style="width: 100%; height: 50px;"/>
       </q-card-actions>
     </q-card>
-    <div class="text-h6 text-center" style="margin-top: 10px; margin-bottom: 10px">{{$t('ForgedBlocks')}}</div>
+    <div
+      class="text-h6 text-center"
+      style="margin-top: 10px; margin-bottom: 10px"
+    >{{$t('ForgedBlocks')}}</div>
     <q-markup-table>
       <thead>
         <tr>
@@ -96,7 +99,13 @@
       </tbody>
     </q-markup-table>
     <div class="q-pa-lg flex flex-center">
-      <q-pagination v-model="page" :max="maxPages" :max-pages="10" :direction-links="true" @input="onPageChange"></q-pagination>
+      <q-pagination
+        v-model="page"
+        :max="maxPages"
+        :max-pages="10"
+        :direction-links="true"
+        @input="onPageChange"
+      ></q-pagination>
     </div>
     <!-- <div class="news-list">
       <q-timeline>
@@ -138,6 +147,8 @@
 </style>
 
 <script>
+import { log } from '../utils'
+
 export default {
   name: 'PageDelegateDetail',
   data() {
@@ -180,10 +191,27 @@ export default {
         console.error('failed to get forged blocks', e)
       }
     },
+    async getTeamProfile(){
+      if (!this.$asch.ready) {
+        await this.$asch.readyAsync()
+      }
+      try {
+        const result = await this.$asch.contract.getProfile(this.info.delegateName)
+        log('getProfile', result)
+        const { name, banner, website, icon, intro } = result.data
+        this.info.name = name
+        this.info.banner = banner
+        this.info.icon = icon
+        this.info.website = website
+        this.info.intro = intro
+      } catch (e) {
+        console.error('failed to get team profile from contrat', e)
+      }
+    },
     async getDelegateDetail() {
       try {
         const result = await this.$api.getDelegateDetail(this.id)
-        console.log('get delegate detail', result)
+        log('get delegate detail', result)
         const d = result.delegate
         const lastBlockTime = d.lastForgingBlock
           ? d.lastForgingBlock.timestamp
@@ -205,6 +233,7 @@ export default {
           banner: d.profile ? d.profile.banner : '',
           intro: d.profile ? d.profile.intro : '--'
         }
+        this.getTeamProfile()
         this.getForgedBlocks(1)
       } catch (e) {
         console.error('failed to get delegate detail', e)

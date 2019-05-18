@@ -57,7 +57,7 @@ export default {
   computed: {},
   methods: {
     onShown() {
-      console.log('VoteDialog onShown')
+      log('VoteDialog onShown')
     },
     show(title, target, votedDelegate, power) {
       this.title = title

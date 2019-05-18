@@ -99,13 +99,13 @@ export default {
         return
       }
 
-      console.log('lock params', this.lockDate, this.lockAmount)
+      log('lock params', this.lockDate, this.lockAmount)
       const realAmount = this.$asch.toSatoshi(Number(this.lockAmount))
       const lockPeriod = new Date(this.lockDate) - Date.now()
       const lockHeight =
         this.currentHeight +
         Math.floor(lockPeriod / constants.BLOCK_INTERVAL_MS)
-      console.log('lock transaction args', realAmount, lockHeight)
+      log('lock transaction args', realAmount, lockHeight)
       try {
         await this.$asch.lock(lockHeight, realAmount)
         this.showDialog = false

@@ -191,6 +191,8 @@
 </style>
 
 <script>
+import { log } from '../utils'
+
 export default {
   name: 'PageDelegates',
   components: {
@@ -241,12 +243,12 @@ export default {
     },
     async getDelegates(page) {
       try {
-        console.log('getDelegates', page)
+        log('getDelegates', page)
         const result = await this.$api.getDelegatesWithProfile(
           (page - 1) * this.pageSize,
           this.pageSize
         )
-        console.log('getDelegates result', result)
+        log('getDelegates result', result)
         this.maxPages = Math.ceil(result.totalCount / this.pageSize)
         this.superNodes = result.delegates.map(d => {
           const lastBlockTime = d.lastForgingBlock
@@ -273,7 +275,7 @@ export default {
       }
     },
     onVoteClicked(item) {
-      console.log('onVoteClicked...')
+      log('onVoteClicked...')
       if (this.votePower === 0) {
         alert('You have no vote power. You may lock your XAS to obtain some.')
         return
@@ -327,7 +329,7 @@ export default {
         this.$api.getAccount(address),
         this.$api.getVotedDelegate(address)
       ])
-      console.log('getAccountAndVotingInfo', results)
+      log('getAccountAndVotingInfo', results)
       const { account, latestBlock } = results[0]
       const delegate = results[1].delegates[0]
       if (account) {
@@ -375,11 +377,11 @@ export default {
     }
   },
   mounted() {
-    console.log('===============Delegates page mounted==============')
+    log('===============Delegates page mounted==============')
     this.refresh()
     setInterval(() => this.refresh(), 10000)
     this.$asch.on('accountChanged', (newAccount, oldAccount) => {
-      console.log('accountChanged:', newAccount.address, oldAccount.address)
+      log('accountChanged:', newAccount.address, oldAccount.address)
       this.getAccountAndVotingInfo()
     })
   }

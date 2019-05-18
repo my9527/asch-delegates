@@ -95,6 +95,7 @@
 
 <script>
 import { QBtnDropdown } from 'quasar'
+import { log } from '../utils'
 
 export default {
   name: 'MainLayout',
@@ -140,12 +141,12 @@ export default {
       this.initAscPay()
     },
     setLanguage(lang) {
-      console.log('==================setLanguage', lang)
+      log('==================setLanguage', lang)
       this.$i18n.locale = this.lang = lang
       this.$q.localStorage.set('lang', lang)
     },
     onLanguageSelected(item) {
-      console.log('onLanguageSelected', item.lang)
+      log('onLanguageSelected', item.lang)
       this.setLanguage(item.lang)
     },
     onNavBtnClicked(item) {
@@ -159,7 +160,7 @@ export default {
         if (!window.aschPay.ready) {
           return
         }
-        console.log('window.aschPay is ready')
+        log('window.aschPay is ready')
         clearInterval(interval)
         this.$asch.setAschPay(window.aschPay)
       }
@@ -174,7 +175,7 @@ export default {
     }
   },
   mounted() {
-    console.log('====================Main mounted======================', this.$i18n)
+    log('====================Main mounted======================', this.$i18n)
     this.init()
     const pathname = window.location.pathname
     if (pathname.length > 1) {

@@ -1,9 +1,18 @@
 import axios from 'axios'
+import global from '../utils/global'
 
 class ExplorerAPI {
   constructor() {
+    const host = window.location.host
+    let baseURL = 'http://localhost:5096'
+    if (/localhost/.test(host)) {
+      global.enableLog()
+    } else {
+      global.disableLog()
+      baseURL = window.location.origin
+    }
     this.client = axios.create({
-      baseURL: 'http://localhost:5096',
+      baseURL,
       timeout: 4000,
       headers: {
         'content-type': 'application/json'

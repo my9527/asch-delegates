@@ -126,6 +126,8 @@
 </style>
 
 <script>
+import { log } from '../utils'
+
 export default {
   name: 'PageRegister',
   data() {
@@ -144,24 +146,24 @@ export default {
   },
   methods: {
     setAccountName() {
-      console.log('setAccountName', this.inputAccountName)
+      log('setAccountName', this.inputAccountName)
       this.$asch
         .setAccountName(this.inputAccountName)
         .then(result => {
-          console.log('setAccountName result', result)
+          log('setAccountName result', result)
         })
         .catch(e => {
-          console.log('failed to setAccountName', e)
+          log('failed to setAccountName', e)
         })
     },
     registerDelegate() {
       this.$asch
         .registerDelegate()
         .then(result => {
-          console.log('registerDelegate result', result)
+          log('registerDelegate result', result)
         })
         .catch(e => {
-          console.log('failed to registerDelegate', e)
+          log('failed to registerDelegate', e)
         })
     },
     registerProfile() {
@@ -175,10 +177,10 @@ export default {
       this.$asch.contract
         .registerProfile(profile)
         .then(result => {
-          console.log('registerProfile result', result)
+          log('registerProfile result', result)
         })
         .catch(e => {
-          console.log('failed to registerProfile', e)
+          log('failed to registerProfile', e)
         })
     },
     getAccountInfo() {
@@ -186,7 +188,7 @@ export default {
       this.$api
         .getAccount(address)
         .then(result => {
-          console.log('getAccount result', result)
+          log('getAccount result', result)
           if (!result.account) {
             alert('AschPay not ready!')
             return
@@ -207,7 +209,7 @@ export default {
         this.$asch.contract
           .getProfile(this.accountName)
           .then(result => {
-            console.log('getTeamProfile result', result)
+            log('getTeamProfile result', result)
             this.profile = result.data
           })
           .catch(e => {
@@ -217,7 +219,7 @@ export default {
     }
   },
   mounted() {
-    console.log('==================RegisterDelegate=================')
+    log('==================RegisterDelegate=================')
     this.getAccountInfo()
   }
 }
