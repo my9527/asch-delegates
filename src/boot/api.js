@@ -11,6 +11,10 @@ class ExplorerAPI {
     })
   }
 
+  async getForgedBlocks(name, offset, limit) {
+    return this.get('/api/v2/misc/blocksForgedBy', { name, offset, limit, reverse: 1 })
+  }
+
   async getDelegatesWithProfile(offset, limit) {
     return this.get('/api/v2/misc/delegatesWithProfile', { offset, limit })
   }

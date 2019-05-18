@@ -1,10 +1,10 @@
 <template>
   <q-page class="flex column">
     <div class="row q-gutter-md items-center justify-center" style="margin-top: 10px;">
-      <div class="text-weight-light">Balance:</div>
+      <div class="text-weight-light">{{$t('Balance')}}:</div>
       <div>{{ unlockedBalance }}</div>
       <q-btn
-        label="Lock"
+        :label="$t('BTN_LOCK')"
         color="secondary"
         :disable="unlockedBalance === 0"
         @click="onLockClicked"
@@ -12,9 +12,9 @@
 
       <q-separator vertical/>
 
-      <div class="text-weight-light">Vote Power:</div>
+      <div class="text-weight-light">{{$t('VotePower')}}:</div>
       <div>{{ votePower }}</div>
-      <q-btn label="unlock" color="secondary" :disable="!canUnlock" @click="onUnlockClicked"/>
+      <q-btn :label="$t('BTN_UNLOCK')" color="secondary" :disable="!canUnlock" @click="onUnlockClicked"/>
       <!-- <template v-if="isUnlockTimePassed">
 
       </template>
@@ -26,14 +26,14 @@
       <q-separator vertical/>
 
       <template v-if="votedDelegate !== ''">
-        <div class="text-weight-light">Voted:</div>
+        <div class="text-weight-light">{{$t('Voted')}}:</div>
         <div>{{ votedDelegate }}</div>
       </template>
       <template v-else>
-        <div class="text-weight-light">Not Voted</div>
+        <div class="text-weight-light">{{$t('Unvoted')}}</div>
       </template>
       <q-btn
-        label="Unvote"
+        :label="$t('BTN_UNVOTE')"
         color="secondary"
         :disable="votedDelegate === ''"
         @click="unOnvoteClicked"
@@ -49,25 +49,25 @@
         <tbody>
           <tr>
             <td>
-              <span style="color: grey">Super Nodes</span>
+              <span style="color: grey">{{$t('SuperNodes')}}</span>
               <br>
               <br>
               <span>{{totalSuperNodes}}</span>
             </td>
             <td>
-              <span style="color: grey">Total Delegates</span>
+              <span style="color: grey">{{$t('TotalDelegates')}}</span>
               <br>
               <br>
               <span>{{totalDelegates}}</span>
             </td>
             <td>
-              <span style="color: grey">Voted Coins</span>
+              <span style="color: grey">{{$t('VotedCoins')}}</span>
               <br>
               <br>
               <span>{{totalVotes}}</span>
             </td>
             <td>
-              <span style="color: grey">Voted Accounts</span>
+              <span style="color: grey">{{$t('VotedAccounts')}}</span>
               <br>
               <br>
               <span>{{votedAccounts}}</span>
@@ -81,12 +81,12 @@
       <thead>
         <tr>
           <th class="text-left">#</th>
-          <th class="text-left">Name</th>
-          <th class="text-center">Status</th>
-          <th class="text-right">Last Forging</th>
-          <th class="text-right">Productivity/Blocks</th>
-          <th class="text-right">Votes/Ratio</th>
-          <th class="text-right">Profits</th>
+          <th class="text-left">{{$t('Name')}}</th>
+          <th class="text-center">{{$t('Status')}}</th>
+          <th class="text-right">{{$t('LastForging')}}</th>
+          <th class="text-right">{{$t('Productivity')}}/{{$t('BlocksNumber')}}</th>
+          <th class="text-right">{{$t('Votes')}}/{{$t('Ratio')}}</th>
+          <th class="text-right">{{$t('Profits')}}</th>
           <th></th>
         </tr>
       </thead>
@@ -118,13 +118,13 @@
             <span style="color: grey; font-weight: bold">XAS</span>
           </td>
           <td class="text-center">
-            <q-btn color="secondary" @click="onVoteClicked(item)">Vote</q-btn>
+            <q-btn color="secondary" @click="onVoteClicked(item)">{{$t('BTN_VOTE')}}</q-btn>
           </td>
         </tr>
       </tbody>
     </q-markup-table>
     <div class="q-pa-lg flex flex-center">
-      <q-pagination v-model="page" :max="maxPages" :direction-links="true" @input="onPageChange"></q-pagination>
+      <q-pagination v-model="page" :max="maxPages" :max-pages="10" :direction-links="true" @input="onPageChange"></q-pagination>
     </div>
 
     <VoteDialog ref="voteDialog"/>
@@ -237,11 +237,11 @@ export default {
   },
   methods: {
     onPageChange(page) {
-      this.getDelegates(page, this.pageSize)
+      this.getDelegates(page)
     },
-    async getDelegates(page, count) {
+    async getDelegates(page) {
       try {
-        console.log('getDelegates', page, count)
+        console.log('getDelegates', page)
         const result = await this.$api.getDelegatesWithProfile(
           (page - 1) * this.pageSize,
           this.pageSize
@@ -359,7 +359,7 @@ export default {
     },
     refresh() {
       this.getAccountAndVotingInfo()
-      this.getDelegates(1, this.pageSize)
+      this.getDelegates(1)
       this.getVotingSummary()
     }
   },

@@ -7,58 +7,58 @@
       </a>
       <q-markup-table separator="vertical">
         <tr>
-          <td class="attr-key">Name</td>
+          <td class="attr-key">{{$t('Name')}}</td>
           <td class="attr-value">{{ info.name }}</td>
         </tr>
         <tr>
-          <td class="attr-key">Delegate Name</td>
+          <td class="attr-key">{{$t('DelegateName')}}</td>
           <td class="attr-value">{{ info.delegateName }}</td>
         </tr>
         <tr>
-          <td class="attr-key">Address</td>
+          <td class="attr-key">{{$t('Address')}}</td>
           <td class="attr-value">{{ info.address }}</td>
         </tr>
         <tr>
-          <td class="attr-key">Website</td>
+          <td class="attr-key">{{$t('Website')}}</td>
           <td class="attr-value">
             <a :href="info.website">{{ info.website }}</a>
           </td>
         </tr>
         <tr>
-          <td class="attr-key">Rank</td>
+          <td class="attr-key">{{$t('Rank')}}</td>
           <td class="attr-value">{{ info.rank }}</td>
         </tr>
         <tr>
-          <td class="attr-key">Status</td>
+          <td class="attr-key">{{$t('Status')}}</td>
           <td class="attr-value">{{ info.status ? 'online' : 'offline'}}</td>
         </tr>
         <tr>
-          <td class="attr-key">Last forging time</td>
+          <td class="attr-key">{{$t('LastForging')}}</td>
           <td class="attr-value">{{ info.lastForgingTime }}</td>
         </tr>
         <tr>
-          <td class="attr-key">Productivity</td>
+          <td class="attr-key">{{$t('Productivity')}}</td>
           <td class="attr-value">{{ info.productivity }}</td>
         </tr>
         <tr>
-          <td class="attr-key">Produced Blocks</td>
+          <td class="attr-key">{{$t('ProducedBlocks')}}</td>
           <td class="attr-value">{{ info.producedBlocks }}</td>
         </tr>
         <tr>
-          <td class="attr-key">Votes</td>
+          <td class="attr-key">{{$t('Votes')}}</td>
           <td class="attr-value">{{ info.votes }}</td>
         </tr>
         <tr>
-          <td class="attr-key">Votes Ratio</td>
+          <td class="attr-key">{{$t('VotesRatio')}}</td>
           <td class="attr-value">{{ info.votesRatio }}</td>
         </tr>
         <tr>
-          <td class="attr-key">Profits</td>
+          <td class="attr-key">{{$t('Profits')}}</td>
           <td class="attr-value">{{ info.profits }}</td>
         </tr>
       </q-markup-table>
       <q-card-section style="text-align: center">
-        <span style="font-weight: bold;">Introdution</span>
+        <span style="font-weight: bold;">{{$t('Introduction')}}</span>
         <br>
         <span style="color: grey;">{{ info.intro }}</span>
         <br>
@@ -72,7 +72,33 @@
         <q-btn color="secondary" label="Vote" style="width: 100%; height: 50px;"/>
       </q-card-actions>
     </q-card>
-    <div class="news-list">
+    <div class="text-h6 text-center" style="margin-top: 10px; margin-bottom: 10px">{{$t('ForgedBlocks')}}</div>
+    <q-markup-table>
+      <thead>
+        <tr>
+          <th class="text-left">Height</th>
+          <th class="text-center">Hash</th>
+          <th class="text-center">Timestamp</th>
+          <th class="text-center">Transactions</th>
+          <th class="text-right">Reward</th>
+          <th class="text-right">Fees</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="item of forgedBlocks" :key="item.height">
+          <td class="text-left">{{item.height}}</td>
+          <td class="text-center">{{item.id}}</td>
+          <td class="text-center">{{getRealTime(item.timestamp)}}</td>
+          <td class="text-center">{{item.count}}</td>
+          <td class="text-right">{{item.reward}}</td>
+          <td class="text-right">{{item.fees}}</td>
+        </tr>
+      </tbody>
+    </q-markup-table>
+    <div class="q-pa-lg flex flex-center">
+      <q-pagination v-model="page" :max="maxPages" :max-pages="10" :direction-links="true" @input="onPageChange"></q-pagination>
+    </div>
+    <!-- <div class="news-list">
       <q-timeline>
         <q-timeline-entry heading class="text-center">Team Recently News</q-timeline-entry>
         <q-timeline-entry
@@ -84,7 +110,7 @@
           <div>{{ item.brief }}</div>
         </q-timeline-entry>
       </q-timeline>
-    </div>
+    </div>-->
   </q-page>
 </template>
 
@@ -135,36 +161,28 @@ export default {
         intro:
           'The asch core team powered by our mathematically optimal network.'
       },
-      teamNews: [
-        {
-          id: '1',
-          timestamp: new Date().toDateString(),
-          title: 'IOST Developer Bounty Program Update: 18th Week',
-          brief:
-            'This is the 18th week of IOST developer bounty program update. We are excited to see more and more developers build Dapps on IOST and going live with their applications.'
-        },
-        {
-          id: '2',
-          timestamp: new Date().toDateString(),
-          title: 'IOST Developer Bounty Program Update: 18th Week',
-          brief:
-            'This is the 18th week of IOST developer bounty program update. We are excited to see more and more developers build Dapps on IOST and going live with their applications.'
-        },
-        {
-          id: '3',
-          timestamp: new Date().toDateString(),
-          title: 'IOST Developer Bounty Program Update: 18th Week',
-          brief:
-            'This is the 18th week of IOST developer bounty program update. We are excited to see more and more developers build Dapps on IOST and going live with their applications.'
-        }
-      ]
+      forgedBlocks: [],
+      page: 1,
+      maxPages: 1,
+      pageSize: 25
     }
   },
-  mounted() {
-    this.id = this.$route.params.id
-    this.$api
-      .getDelegateDetail(this.id)
-      .then(result => {
+  methods: {
+    onPageChange(page) {
+      this.getForgedBlocks(page)
+    },
+    async getForgedBlocks(page) {
+      try {
+        const result = await this.$api.getForgedBlocks(this.info.delegateName, (page - 1) * this.pageSize, this.pageSize)
+        this.maxPages = Math.ceil(result.count / this.pageSize)
+        this.forgedBlocks = result.blocks
+      } catch (e) {
+        console.error('failed to get forged blocks', e)
+      }
+    },
+    async getDelegateDetail() {
+      try {
+        const result = await this.$api.getDelegateDetail(this.id)
         console.log('get delegate detail', result)
         const d = result.delegate
         const lastBlockTime = d.lastForgingBlock
@@ -184,13 +202,21 @@ export default {
           profits: this.$asch.fromSatoshi(d.rewards + d.fees),
           address: d.address,
           website: d.profile ? d.profile.website : '--',
-          banner: d.profile.banner,
+          banner: d.profile ? d.profile.banner : '',
           intro: d.profile ? d.profile.intro : '--'
         }
-      })
-      .catch(error => {
-        console.error('failed to get delegate detail', error)
-      })
+        this.getForgedBlocks(1)
+      } catch (e) {
+        console.error('failed to get delegate detail', e)
+      }
+    },
+    getRealTime(epochTime) {
+      return this.$asch.getRealTime(epochTime)
+    }
+  },
+  mounted() {
+    this.id = this.$route.params.id
+    this.getDelegateDetail()
   }
 }
 </script>

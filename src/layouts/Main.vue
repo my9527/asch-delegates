@@ -5,7 +5,7 @@
         <q-avatar>
           <img src="/statics/favicon.ico">
         </q-avatar>
-        <q-toolbar-title shrink>Asch Delegates</q-toolbar-title>
+        <q-toolbar-title shrink>Asch</q-toolbar-title>
 
         <q-btn
           stretch
@@ -13,7 +13,7 @@
           no-caps
           v-for="item of navigations"
           v-bind:key="item.label"
-          v-bind:label="item.label"
+          v-bind:label="$t(item.label)"
           v-bind:to="item.to"
           v-bind:class="item.label === currentPage ? 'active' : 'unactive'"
           @click="onNavBtnClicked(item)"
@@ -21,7 +21,7 @@
 
         <q-space/>
 
-        <!-- <q-btn-dropdown stretch flat v-bind:label="currentLang">
+        <q-btn-dropdown stretch flat v-bind:label="langLabel">
           <q-list>
             <q-item
               v-for="item of languages"
@@ -35,7 +35,7 @@
               </q-item-section>
             </q-item>
           </q-list>
-        </q-btn-dropdown>-->
+        </q-btn-dropdown>
       </q-toolbar>
     </q-header>
 
@@ -94,7 +94,7 @@
 </style>
 
 <script>
-import { openURL, QBtnDropdown } from 'quasar'
+import { QBtnDropdown } from 'quasar'
 
 export default {
   name: 'MainLayout',
@@ -102,29 +102,51 @@ export default {
     return {
       leftDrawerOpen: this.$q.platform.is.desktop,
       languages: [
-        { lang: 'zh-cn', label: '简体中文', icon: 'map' },
-        { lang: 'en-us', label: 'English', icon: 'directions' }
+        { lang: 'zh', label: '简体中文' },
+        { lang: 'en', label: 'English' }
       ],
-      currentLang: 'English',
+      lang: 'zh',
       navigations: [
         { label: 'Vote', to: '/' },
         { label: 'Register', to: '/register' },
         // { label: 'Bonus', to: '/bonus' },
         // { label: 'News', to: '/news' },
-        { label: 'Help', to: '/help' }
+        { label: 'FAQ', to: '/FAQ' }
       ],
       currentPage: 'Vote',
-      aschPayInstalled: true,
+      aschPayInstalled: true
+    }
+  },
+  computed: {
+    langLabel() {
+      for (const item of this.languages) {
+        if (item.lang === this.lang) {
+          return item.label
+        }
+      }
+      return 'English'
     }
   },
   methods: {
     async init() {
+      let initLang = this.$q.localStorage.getItem('lang')
+      if (!initLang && navigator.language) {
+        initLang = navigator.language.split('-')[0].toLowerCase()
+      }
+      if (!initLang) {
+        initLang = 'en'
+      }
+      this.setLanguage(initLang)
       this.initAscPay()
     },
-    openURL,
+    setLanguage(lang) {
+      console.log('==================setLanguage', lang)
+      this.$i18n.locale = this.lang = lang
+      this.$q.localStorage.set('lang', lang)
+    },
     onLanguageSelected(item) {
-      console.log('onLanguageSelected', item)
-      this.currentLang = item.label
+      console.log('onLanguageSelected', item.lang)
+      this.setLanguage(item.lang)
     },
     onNavBtnClicked(item) {
       this.currentPage = item.label
@@ -152,7 +174,7 @@ export default {
     }
   },
   mounted() {
-    console.log('====================Main mounted======================')
+    console.log('====================Main mounted======================', this.$i18n)
     this.init()
     const pathname = window.location.pathname
     if (pathname.length > 1) {

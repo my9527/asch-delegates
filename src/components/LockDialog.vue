@@ -40,9 +40,9 @@
         </q-input>
         <br>
         <div>
-          <p>If you want to vote lately, please don't lock all of your balance</p>
-          <p>最低锁仓高度为上次锁仓高度或当前区块高度顺延259200，大约为1个月</p>
-          <p>最高锁仓高度为上次锁仓高度或当前高度顺延31104000，大约为10年</p>
+          <p>{{$t('LOCK_DIALOG_TIP_1')}}</p>
+          <p>{{$t('LOCK_DIALOG_TIP_2')}}</p>
+          <p>{{$t('LOCK_DIALOG_TIP_3')}}</p>
         </div>
       </q-card-section>
 

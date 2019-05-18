@@ -9,18 +9,18 @@
       <q-card-section>
         <br>
         <div>
-          <span>You will vote the delegate:</span>
+          <span>{{$t('VOTE_DIALOG_TIP_1')}}:</span>
           <span class="keyword">{{voteTarget}}</span>
         </div>
         <div>
-          <span>The operation will increase</span>
+          <span>{{$t('VOTE_DIALOG_TIP_2')}}</span>
           <span class="keyword">{{power}}</span>
-          <span>votes for your voted delegate.</span>
+          <span>{{$t('VOTE_DIALOG_TIP_3')}}.</span>
         </div>
         <div>
-          <span>The operation will cost you</span>
+          <span>{{$t('VOTE_DIALOG_TIP_4')}}</span>
           <span class="keyword">0.1</span>
-          <span>XAS or equivalent NET resources.</span>
+          <span>{{$t('VOTE_DIALOG_TIP_5')}}.</span>
         </div>
       </q-card-section>
 
