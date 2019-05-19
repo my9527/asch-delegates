@@ -20,6 +20,7 @@
         />
 
         <q-space/>
+        <a style="color: white" target="blank" href="http://www.asch.io:3000/faucet/index.html">{{$t('Faucet')}}</a>
 
         <q-btn-dropdown stretch flat v-bind:label="langLabel">
           <q-list>

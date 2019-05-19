@@ -4,6 +4,8 @@ export default {
   Register: 'Register',
   FAQ: 'FAQ',
 
+  Faucet: 'Faucet',
+
   BTN_LOCK: 'LOCK',
   BTN_UNLOCK: 'UNLOCK',
   BTN_UNVOTE: 'UNVOTE',

@@ -62,6 +62,7 @@
 <script>
 import { date } from 'quasar'
 import constants from '../utils/constants'
+import { log } from '../utils'
 
 export default {
   name: 'VoteDialog',

@@ -132,6 +132,7 @@ export default {
   name: 'PageRegister',
   data() {
     return {
+      timer: null,
       step: 1,
       profile: null,
       isDelegate: false,
@@ -221,6 +222,10 @@ export default {
   mounted() {
     log('==================RegisterDelegate=================')
     this.getAccountInfo()
-  }
+    this.timer = setInterval(() => this.getAccountInfo(), 10000)
+  },
+  beforeDestroy() {
+    if (this.timer) clearInterval(this.timer)
+  },
 }
 </script>

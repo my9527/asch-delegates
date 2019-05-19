@@ -4,6 +4,8 @@ export default {
   Register: '注册',
   FAQ: 'FAQ',
 
+  Faucet: '水龙头',
+
   BTN_LOCK: '锁仓',
   BTN_UNLOCK: '解锁',
   BTN_UNVOTE: '撤销',

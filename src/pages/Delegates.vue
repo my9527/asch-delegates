@@ -202,6 +202,7 @@ export default {
   },
   data() {
     return {
+      timer: null,
       currentHeight: 0,
       votedDelegate: '',
       votePower: 0,
@@ -243,7 +244,7 @@ export default {
     },
     async getDelegates(page) {
       try {
-        log('getDelegates', page)
+        log('getDelegates page', page)
         const result = await this.$api.getDelegatesWithProfile(
           (page - 1) * this.pageSize,
           this.pageSize
@@ -258,7 +259,7 @@ export default {
             rank: d.rate,
             icon: d.profile ? d.profile.icon : '',
             delegateName: d.name,
-            name: d.profile ? d.profile.nodeName : '--',
+            name: d.profile ? d.profile.name : '--',
             status: d.online,
             lastForgingTime: this.$asch.getRealTime(lastBlockTime),
             producedBlocks: d.producedBlocks,
@@ -361,7 +362,7 @@ export default {
     },
     refresh() {
       this.getAccountAndVotingInfo()
-      this.getDelegates(1)
+      this.getDelegates(this.page)
       this.getVotingSummary()
     }
   },
@@ -379,11 +380,14 @@ export default {
   mounted() {
     log('===============Delegates page mounted==============')
     this.refresh()
-    setInterval(() => this.refresh(), 10000)
+    this.timer = setInterval(() => this.refresh(), 10000)
     this.$asch.on('accountChanged', (newAccount, oldAccount) => {
       log('accountChanged:', newAccount.address, oldAccount.address)
       this.getAccountAndVotingInfo()
     })
+  },
+  beforeDestroy() {
+    if (this.timer) clearInterval(this.timer)
   }
 }
 </script>

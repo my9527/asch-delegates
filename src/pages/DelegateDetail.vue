@@ -220,7 +220,7 @@ export default {
           rank: d.rate,
           icon: d.profile ? d.profile.icon : '',
           delegateName: d.name,
-          name: d.profile ? d.profile.nodeName : '--',
+          name: d.profile ? d.profile.name : '--',
           status: d.online,
           lastForgingTime: this.$asch.getRealTime(lastBlockTime),
           producedBlocks: d.producedBlocks,
