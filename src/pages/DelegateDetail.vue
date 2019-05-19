@@ -1,7 +1,7 @@
 <template>
   <q-page class="flex column">
     <q-card style="margin-top: 20px;">
-      <img v-if="!!info.banner" width="100%" v-bind:src="info.banner">
+      <img v-if="!!info.banner" width="100%" v-bind:src="info.banner" onerror="this.src='/statics/banner.jpg'">
       <a v-else href="https://asch.io" target="_blank">
         <img width="100%" src="/statics/banner.jpg">
       </a>

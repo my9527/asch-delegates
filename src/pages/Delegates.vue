@@ -98,7 +98,7 @@
           </td>
           <td class="text-left">
             <a :href="item.detailURL" class="delegate-name-cell row">
-              <img v-if="item.icon" width="32" height="32" :src="item.icon">
+              <img v-if="item.icon" width="32" height="32" :src="item.icon" v-bind:onerror="onImageError(item)">
               <Jdenticon v-else :address="item.address" size="32"/>
               <div style="margin-left: 12px;">
                 <span style="color: #3790ff; font-weight: bold;">{{ item.name }}</span>
@@ -226,7 +226,7 @@ export default {
           votes: '23,456,78',
           votesRatio: '9.8%',
           profits: 543543,
-          detailURL: '/delegate/iotex',
+          detailURL: '/delegate/asch_core',
           address: 'ABuH9VHV3cFi9UKzcHXGMPGnSC4QqT2cZ5'
         }
       ],
@@ -241,6 +241,9 @@ export default {
   methods: {
     onPageChange(page) {
       this.getDelegates(page)
+    },
+    onImageError(item) {
+      item.icon = '/statics/error.png'
     },
     async getDelegates(page) {
       try {
@@ -257,7 +260,8 @@ export default {
             : 0
           return {
             rank: d.rate,
-            icon: d.profile ? d.profile.icon : '',
+            // icon: d.profile ? d.profile.icon : '',
+            icon: '1',
             delegateName: d.name,
             name: d.profile ? d.profile.name : '--',
             status: d.online,
