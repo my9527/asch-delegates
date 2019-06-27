@@ -98,7 +98,7 @@
           </td>
           <td class="text-left">
             <a :href="item.detailURL" class="delegate-name-cell row">
-              <img v-if="item.icon" width="32" height="32" :src="item.icon" v-bind:onerror="onImageError(item)">
+              <img v-if="item.icon" width="32" height="32" :src="item.icon" onerror="this.src='/statics/error.png'">
               <Jdenticon v-else :address="item.address" size="32"/>
               <div style="margin-left: 12px;">
                 <span style="color: #3790ff; font-weight: bold;">{{ item.name }}</span>
@@ -205,6 +205,7 @@ export default {
       timer: null,
       currentHeight: 0,
       votedDelegate: '',
+      votingDelegate: '',
       votePower: 0,
       unlockHeight: 0,
       unlockedBalance: 0,
@@ -242,9 +243,6 @@ export default {
     onPageChange(page) {
       this.getDelegates(page)
     },
-    onImageError(item) {
-      item.icon = '/statics/error.png'
-    },
     async getDelegates(page) {
       try {
         log('getDelegates page', page)
@@ -260,8 +258,7 @@ export default {
             : 0
           return {
             rank: d.rate,
-            // icon: d.profile ? d.profile.icon : '',
-            icon: '1',
+            icon: d.profile ? d.profile.icon : '',
             delegateName: d.name,
             name: d.profile ? d.profile.name : '--',
             status: d.online,
@@ -285,10 +282,11 @@ export default {
         alert('You have no vote power. You may lock your XAS to obtain some.')
         return
       }
-      if (this.votedDelegate === item.delegateName) {
+      if (this.votedDelegate === item.delegateName || this.votingDelegate === item.delegateName) {
         alert('You have voted this delegate')
         return
       }
+      this.votingDelegate = item.delegateName
       this.$refs.voteDialog.show(
         'Voting',
         item.delegateName,
@@ -349,6 +347,7 @@ export default {
       }
       if (delegate) {
         this.votedDelegate = delegate.name
+        this.votingDelegate = ''
       }
     },
     async getVotingSummary() {
