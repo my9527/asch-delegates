@@ -10,6 +10,8 @@ const routes = [
       { path: 'council', component: () => import('pages/Council.vue') },
       { path: 'FAQ', component: () => import('pages/FAQ.vue') },
       { path: 'delegate/:id', component: () => import('pages/DelegateDetail.vue') },
+      { path: 'activity', component: () => import('pages/Activity.vue') },
+
     ]
   }
 ]

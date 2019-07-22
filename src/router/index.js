@@ -3,6 +3,8 @@ import VueRouter from 'vue-router'
 
 import routes from './routes'
 
+// import '../directives/message'
+
 Vue.use(VueRouter)
 
 /*

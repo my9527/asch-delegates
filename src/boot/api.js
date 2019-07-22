@@ -4,7 +4,8 @@ import global from '../utils/global'
 class ExplorerAPI {
   constructor() {
     const host = window.location.host
-    let baseURL = 'http://localhost:5096'
+    // let baseURL = 'http://localhost:5096'
+    let baseURL = 'http://testnet.asch.io'
     if (/localhost/.test(host)) {
       global.enableLog()
     } else {
@@ -46,6 +47,37 @@ class ExplorerAPI {
 
   async get(url, params) {
     return this.handleError(this.client.get(url, { params }))
+  }
+
+  /**
+   * 获取当前区块高度
+   *
+   * @return  {[type]}  [return description]
+   */
+  async getBlockHeight() {
+    return this.get('/api/blocks/getHeight')
+  }
+
+  /**
+   * 根据区块高度或id 获取区块信息
+   */
+  async getBlockDetail(heigthOrId){
+    return this.get(`/api/v2/blocks/${heigthOrId}`)
+  }
+
+  /**
+   * 根据地址获取账号信息
+   *
+   * @param   {[type]}  address  [address description]
+   *
+   * @return  {[type]}           [return description]
+   */
+  async getAccountInfo(address) {
+    return this.get(`/api/v2/accounts/${address}`)
+  }
+
+  async getAccountShare(lockHeight, weight) {
+    return this.get('/api/v2/accounts/', {lockHeight, weight})
   }
 
   // private methods

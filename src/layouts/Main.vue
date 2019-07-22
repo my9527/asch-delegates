@@ -113,7 +113,8 @@ export default {
         { label: 'Register', to: '/register' },
         // { label: 'Bonus', to: '/bonus' },
         // { label: 'News', to: '/news' },
-        { label: 'FAQ', to: '/FAQ' }
+        { label: 'FAQ', to: '/FAQ' },
+        { label: 'Activity', to: '/activity'}
       ],
       currentPage: 'Vote',
       aschPayInstalled: true

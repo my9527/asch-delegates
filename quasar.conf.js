@@ -62,7 +62,16 @@ module.exports = function (ctx) {
         'QField',
         'QDate',
         'QPopupProxy',
-        'QAvatar'
+        'QAvatar',
+        'QTabs', 
+        'QTab',
+        'QTabPanels',
+        'QSplitter',
+        'QTabPanel',
+        'QInnerLoading',
+        'QSpinner',
+        'QSpinnerHourglass',
+        'QSpinnerIos',
       ],
 
       directives: [
@@ -74,6 +83,7 @@ module.exports = function (ctx) {
       plugins: [
         'Notify',
         'LocalStorage',
+        'Loading',
       ]
 
       // iconSet: 'ionicons-v4'
