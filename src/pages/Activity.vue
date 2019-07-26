@@ -300,6 +300,7 @@ export default {
 
         async getContract (isInit = false) {
             console.log('getContract', this.$asch)
+        
             if(this.retryTime === 0){
                 this.isLogined = false
                 this.loading = false
@@ -313,7 +314,16 @@ export default {
                 
                 return this.getContract(isInit)
             }
+            this._setHost()
             this.contract = await this.$asch.aschPay.createContractFromName(CONTRACT)
+        },
+
+
+        /**
+         * Todo 临时用，待删除
+         */
+        _setHost() {
+            this.$asch.aschPay.api._provider._instance.defaults.baseURL = 'https://wallet.asch.io/'
         },
 
         // async getInvestorInfo() {
