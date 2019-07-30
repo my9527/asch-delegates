@@ -160,8 +160,8 @@ export default {
             // vals.totalBonus = this.calcTotalBonus(this.investor.totalBonus) // 利息
             vals.totalBonus = xasToPrecision((remainingAmont || 0) + (withdrawedAmount || 0))
             vals.withdrawCount = `${withdrawCount || '-'}`
-            vals.lastWithdrawTime = `${this.resolveHeightToTime(lastWithdrawHeight)}(${lastWithdrawHeight || '-'})`  // 上次提取高度（时间）
-            vals.nextWithdrawTime = `${this.resolveHeightToTime(nextWithdrawHeight)}(${nextWithdrawHeight || '-'})`
+            vals.lastWithdrawTime = lastWithdrawHeight ? `${this.resolveHeightToTime(lastWithdrawHeight)}(${lastWithdrawHeight || '-'})` : '-'  // 上次提取高度（时间）
+            vals.nextWithdrawTime = nextWithdrawHeight ? `${this.resolveHeightToTime(nextWithdrawHeight)}(${nextWithdrawHeight || '-'})` : '-'
             vals.nextWithdrawAmount = xasToPrecision(Math.min(nextWithdrawAmount, remainingAmont))
             if(this.investor.cleared){
                 vals.nextWithdrawTime = null

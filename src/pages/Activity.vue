@@ -480,8 +480,9 @@ export default {
         },
 
         pollingPage() {
-            this.listTimer = setTimeout(() => {
-                this.getACList(true)
+            this.listTimer = setTimeout(async () => {
+                await this.getCurHeight(true)
+                await this.getACList(true)
                 this.pollingPage()
             }, POLLING_INTERVAL)
         },

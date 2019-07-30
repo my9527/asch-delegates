@@ -175,7 +175,7 @@ export default {
             let _st = 'pre'
             if( height >  launchHeight && height < endHeight) {
                 _st = 'on'
-            } else if(height > endHeight){
+            } else if( height > endHeight ){
                 _st = 'end'
             }
             return statusMap[_st]
