@@ -16,7 +16,7 @@
                     <span class="colItem-val">{{endTime || '-'}}(高度: {{info.endHeight || '-'}})</span>
                 </div>
                 <div class="colItem">
-                    <span class="colItem-label">最小锁仓数量</span>
+                    <span class="colItem-label">最小锁仓金额</span>
                     <span class="colItem-val">{{minLockAmount || '-'}}</span>
                 </div>
                 <div class="colItem">
@@ -162,7 +162,7 @@ export default {
                     style: 'background: #ebab29; color: white'
                 },
                 on: {
-                    txt: '已启用',
+                    txt: '进行中',
                     style: 'background: #018001; color: white'
                 },
                 end: {

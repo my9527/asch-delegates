@@ -149,18 +149,19 @@ export default {
                 nextWithdrawHeight,
                 nextWithdrawAmount,
             } = this.investor
-            vals.address = this.investor.address
+
+            vals.address = this.$asch.defaultAccount.address
             vals.weight = xasToPrecision(lockAmount)
             vals.lockHeight = lockHeight
             vals.shares = shares
-            vals.endTime = this.resolveHeightToTime(endHeight)
+            vals.endTime = `${this.resolveHeightToTime(endHeight)}(${endHeight})`
             vals.lockPeriod = `${(lockPeriod / day_count).toFixed(2) || '-'}天(${lockPeriod})`
             vals.pid = `#${pid}`
             // vals.totalBonus = this.calcTotalBonus(this.investor.totalBonus) // 利息
             vals.totalBonus = xasToPrecision((remainingAmont || 0) + (withdrawedAmount || 0))
-            vals.withdrawCount = `${withdrawCount}`
-            vals.lastWithdrawTime = `${this.resolveHeightToTime(lastWithdrawHeight)}(${lastWithdrawHeight})`  // 上次提取高度（时间）
-            vals.nextWithdrawTime = `${this.resolveHeightToTime(nextWithdrawHeight)}(${nextWithdrawHeight})`
+            vals.withdrawCount = `${withdrawCount || '-'}`
+            vals.lastWithdrawTime = `${this.resolveHeightToTime(lastWithdrawHeight)}(${lastWithdrawHeight || '-'})`  // 上次提取高度（时间）
+            vals.nextWithdrawTime = `${this.resolveHeightToTime(nextWithdrawHeight)}(${nextWithdrawHeight || '-'})`
             vals.nextWithdrawAmount = xasToPrecision(Math.min(nextWithdrawAmount, remainingAmont))
             if(this.investor.cleared){
                 vals.nextWithdrawTime = null

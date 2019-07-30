@@ -12,7 +12,7 @@ function _formatNum(num) {
 
 export function formatTime(timestamp, format = 'YYYY-MM-DD HH:mm:ss') {
   const _date = new Date(timestamp)
-  console.log('timestamp', _date)
+  // console.log('timestamp', _date)
 
   if(!_date.getDate()) {
     return ''

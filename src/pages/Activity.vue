@@ -157,6 +157,7 @@
 </style>
 
 <script>
+import Vue from 'vue'
 import { setTimeout, clearTimeout } from 'timers'
 import Mockjs from 'mockjs'
 import { Promise } from 'q'
@@ -206,6 +207,9 @@ export default {
             retryTime: 5,
             isLogined: true,
             listTimer: null, // 页面轮训 handler
+            // userAccount: this.$asch.defaultAccount,
+            // userAccount: window.aschPay.defaultAccount.,
+
         }
     },
     created() {
@@ -213,6 +217,8 @@ export default {
           spinnerSize: '2em',
           spinner: QSpinnerHourglass,
         })
+        
+        // this.$asch
     },
 
     mounted() {
@@ -242,7 +248,10 @@ export default {
         },
         showProjectPanel() {
             return this.selectedTab === 'project'
-        }
+        },
+        // userAddress() {
+        //     return  this.$asch.defaultAccount.address
+        // }
     },
     
     methods: {
@@ -314,8 +323,24 @@ export default {
                 
                 return this.getContract(isInit)
             }
+            this.watchAccount()
             // this._setHost()
             this.contract = await this.$asch.aschPay.createContractFromName(CONTRACT)
+        },
+
+        watchAccount () {
+            const self = this
+            window._address = window.aschPay.defaultAccount.address
+            // 属性拦截，获取信息更改的
+            Object.defineProperty(window.aschPay.defaultAccount, 'address', {
+                set: function(v) {
+                    this._address = v
+                    window.location.reload(true)
+                },
+                get: function() {
+                    return window._address
+                }
+            })
         },
 
 
@@ -435,7 +460,7 @@ export default {
                 return
             }
             const { account } = await this.$api.getAccountInfo(address)
-            this.accountInfo = account
+            this.accountInfo = account || {}
         },
 
         async getShares(lockHeight, weight, id) {
