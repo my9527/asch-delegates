@@ -186,7 +186,7 @@ export default {
         return {
             activities: [], //projects
             pagination: {
-                pageSize: 12,
+                pageSize: 11,// 实际单页数为 pageSize+1
                 total: 0,
                 current: 1,
                 max: 1,
@@ -258,11 +258,17 @@ export default {
 
         async init() {
             this.loading = true
+            const hash = window.location.hash
             await this.getContract()
             if(!this.contract){
                 this.pollingPage()
                 this.$q.loading.hide()
                 return
+            }
+
+            if(hash.match(/project/i)){
+                this.selectedTab = 'project'
+                this.changeTab('project')
             }
             await this.getACList()
             await this.getCurHeight()
@@ -277,10 +283,10 @@ export default {
             let from = 0
             if(!isRefresh) {
                 this.loading = true
-                from = (current-1) * pageSize
+                from = (current-1) * (pageSize + 1)
             } else {
                 // 页面刷新, 不需要loading
-                from = (this.pagination.current - 1) * pageSize
+                from = (this.pagination.current - 1) * (pageSize + 1)
             }
             const { data: {count, projects }} = await this.contract.queryProjects(pageSize, from)
             // 更新列表
@@ -291,7 +297,7 @@ export default {
                 pageSize,
                 total: count,
                 current: current,
-                max: Math.ceil(count/pageSize)
+                max: Math.ceil(count/(pageSize+1))
             }
             this.loading = false
         },
@@ -385,6 +391,7 @@ export default {
 
         // tab 切换
         async changeTab(tabName) {
+            window.location.hash = `#${tabName}`
             if(tabName === 'project'){
                 this.stopPolling()
             } else {
