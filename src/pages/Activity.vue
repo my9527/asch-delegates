@@ -269,6 +269,9 @@ export default {
             if(hash.match(/project/i)){
                 this.selectedTab = 'project'
                 this.changeTab('project')
+                this.loading = false
+                this.$q.loading.hide()
+                return
             }
             await this.getACList()
             await this.getCurHeight()
