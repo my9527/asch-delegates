@@ -2,8 +2,8 @@
   <q-page class="flex">
     <div class="flex " style="font-size: 24px; font-weight: bold;">
         <div v-if="!loading" style="width:100%">
-            <Ing v-if="isCouncilPending" @refreshMemer="getMembers" :councilInfo="councilInfo" :members="councilMembers"></Ing>
-            <Done v-if="!isCouncilPending" @refreshMemer="getMembers" :councilInfo="councilInfo" :members="councilMembers"></Done>
+            <Ing v-if="councilInfo.status !== 1" @refreshMemer="getMembers" :councilInfo="councilInfo" :members="councilMembers"></Ing>
+            <Done v-if="councilInfo.status === 1" @refreshMemer="getMembers" :councilInfo="councilInfo" :members="councilMembers"></Done>
         </div>
     </div>
   </q-page>
@@ -44,16 +44,28 @@ export default {
           councilMembers: [], //领事会成员
       }
   },
-  computed: {
-      isCouncilPending() {
-          return true
-          return this.councilInfo.status === 1 ? false : true
-      }
-  },
   mounted() {
-      this.init()
+        this.init()
+        this.pollingPage()
   },
+  beforeDestroy() {
+        this.stopPolling()
+    },
+
   methods: {
+
+        pollingPage() {
+            this.listTimer = setTimeout(async () => {
+                this.getCouncilInfo()
+                this.getMembers()
+                this.pollingPage()
+            }, POLLING_INTERVAL)
+        },
+
+        stopPolling() {
+            clearTimeout(this.listTimer)
+            this.listTimer = null
+        },
 
       async init(){
             this.loading = true
