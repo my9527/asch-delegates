@@ -2,7 +2,7 @@
     <div class="page-ing">
         <div class="p-header">理事会成员</div>
         <div class="page-sub">
-           <div v-for="(m, index) in members" class="q-item-wrap" :key="index" >
+           <div v-for="(m, index) in selected" class="q-item-wrap" :key="index" >
                <q-item clickable v-ripple>
                     <q-item-section avatar>
                         <q-avatar size="52px" color="cyan-1">
@@ -211,6 +211,9 @@ export default {
         nextSession() {
              const { sessionEnd } = this.councilInfo
             return this.resolveHeightToTime(sessionEnd +  1)
+        },
+        selected() {
+            return this.members.slice(0, 3)
         }
     },
 

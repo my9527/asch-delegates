@@ -113,9 +113,9 @@ export default {
         { label: 'Register', to: '/register' },
         // { label: 'Bonus', to: '/bonus' },
         // { label: 'News', to: '/news' },
-        { label: 'FAQ', to: '/FAQ' },
         { label: '分红', to: '/activity'},
-        { label: '理事会', to: '/council'}
+        { label: '理事会', to: '/council'},
+        { label: 'FAQ', to: '/FAQ' },
 
       ],
       currentPage: 'Vote',
