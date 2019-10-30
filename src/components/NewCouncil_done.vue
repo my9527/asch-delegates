@@ -177,6 +177,15 @@ export default {
                  name: 'amount',
                  label: '数额',
                   field: 'amount',
+             },{
+                name: 'address',
+                required: true,
+                label: '收款人地址',
+                field: 'recipient'
+             }, {
+                 name: 'remarks',
+                 label: '备注',
+                 field: 'remarks',
              }]
         }
     },
