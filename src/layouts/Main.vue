@@ -115,7 +115,7 @@ export default {
         // { label: 'News', to: '/news' },
         { label: 'FAQ', to: '/FAQ' },
         { label: '分红', to: '/activity'},
-        { label: '理事会', to: '/newCouncil'}
+        { label: '理事会', to: '/council'}
 
       ],
       currentPage: 'Vote',
