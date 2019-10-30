@@ -118,6 +118,12 @@ class Asch {
     return this.signedAndBroadcast(trs)
   }
 
+  // 理事会投票
+  async signedForCouncil(delegate) {
+    const trs = this.buildTransactionForCouncil(delegate)
+    return this.signedAndBroadcast(trs)
+  }
+
   async sign(trs) {
     return new Promise((resolve, reject) => {
       this.aschPay.sign(trs, (e, trs) => {
@@ -129,6 +135,7 @@ class Asch {
 
   async signedAndBroadcast(trs) {
     const signedTrs = await this.sign(trs)
+    console.log(signedTrs)
     return this.aschPay.api.broadcastTransaction(signedTrs)
   }
 
@@ -178,6 +185,21 @@ class Asch {
       s = '0' + s
     }
     return time.getFullYear() + '/' + month + '/' + day + ' ' + h + ':' + m + ':' + s
+  }
+
+   buildTransactionForCouncil({ type, args, fee }) {
+    let transaction = {
+      type,
+      timestamp: this.AschWeb.Utils.getTime() - 5,
+      fee,
+      args,
+      senderPublicKey: '',
+      senderId: '',
+      // signatures: [],
+      // secondSecret: params.secondSecret || '',
+      message:  ''
+    }
+    return transaction
   }
 
 }

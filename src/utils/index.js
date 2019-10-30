@@ -46,3 +46,14 @@ export function getLockedDurationDay(fromHeight, toHeight) {
   return (fromHeight - toHeight) / 8640
 }
 
+
+// 领事会选举获取 transction 构造
+export function getUnsignedTrx({ type, fee, args}){
+  return {
+    type, fee, args,
+    timestamp: 0,
+    message: '',
+    senderPublicKey: '',
+    senderId: ''
+  }
+}

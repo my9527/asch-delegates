@@ -114,7 +114,9 @@ export default {
         // { label: 'Bonus', to: '/bonus' },
         // { label: 'News', to: '/news' },
         { label: 'FAQ', to: '/FAQ' },
-        { label: '分红', to: '/activity'}
+        { label: '分红', to: '/activity'},
+        { label: '理事会', to: '/newCouncil'}
+
       ],
       currentPage: 'Vote',
       aschPayInstalled: true

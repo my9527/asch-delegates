@@ -72,11 +72,15 @@ module.exports = function (ctx) {
         'QSpinner',
         'QSpinnerHourglass',
         'QSpinnerIos',
+        'QTable',
+        'QForm',
+        'QTd',
+        'QTooltip'
       ],
 
       directives: [
         'ClosePopup',
-        'Ripple'
+        'Ripple',
       ],
 
       // Quasar plugins
@@ -84,6 +88,7 @@ module.exports = function (ctx) {
         'Notify',
         'LocalStorage',
         'Loading',
+        'Dialog'
       ]
 
       // iconSet: 'ionicons-v4'
