@@ -2,8 +2,20 @@
   <q-page class="flex">
     <div class="flex " style="font-size: 24px; font-weight: bold;">
         <div v-if="!loading" style="width:100%">
-            <Ing v-if="councilInfo.status !== 1" @refreshMemer="getMembers" :councilInfo="councilInfo" :members="councilMembers"></Ing>
-            <Done v-if="councilInfo.status === 1" @refreshMemer="getMembers" :councilInfo="councilInfo" :members="councilMembers"></Done>
+            <Ing v-if="councilInfo.status !== 1" 
+                @refreshMemer="getMembers" 
+                :councilInfo="councilInfo" 
+                :members="councilMembers"
+                :dis="!hasPlugin"
+
+            ></Ing>
+            <Done v-if="councilInfo.status === 1" 
+                @refreshMemer="getMembers" 
+                :councilInfo="councilInfo" 
+                :members="councilMembers"
+                :dis="!hasPlugin"
+
+            ></Done>
         </div>
     </div>
   </q-page>
@@ -33,6 +45,7 @@ export default {
   },
   data(){
       return {
+          hasPlugin: true,
           loading: true,
         //   contract: null,
           retryTime: 5,
@@ -47,6 +60,9 @@ export default {
   mounted() {
         this.init()
         this.pollingPage()
+        setTimeout(() => {
+            this.checkHasPlugin()
+        }, 1000)
   },
   beforeDestroy() {
         this.stopPolling()
@@ -65,6 +81,10 @@ export default {
         stopPolling() {
             clearTimeout(this.listTimer)
             this.listTimer = null
+        },
+
+        checkHasPlugin() {
+            this.hasPlugin = this.$asch && this.$asch.AschWeb
         },
 
       async init(){

@@ -6,7 +6,7 @@
                 <div>本次选举开始时间: {{startTime}} (区块高度{{this.councilInfo.sessionBegin}})</div>
                 <div>本次选举结束时间: {{endTime}} (区块高度{{this.endHeight}}) </div>
             </div>
-            <q-btn color="primary" class="re" @click="showApplyModal">
+            <q-btn :disable="dis" color="primary" class="re" @click="showApplyModal">
                 申请成为候选人
             </q-btn>
         </div>
@@ -28,7 +28,7 @@
       </template>
        </q-table>
        <div class="text-center btn-wrap">
-           <q-btn color="primary " class="voteBtn full-width" @click="vote" label="投票" />
+           <q-btn :disable="dis" color="primary " class="voteBtn full-width" @click="vote" label="投票" />
        </div>
         
     </div>
@@ -44,7 +44,7 @@ import { async } from 'q'
 
 export default {
 
-     props: ['councilInfo', 'members'],
+     props: ['councilInfo', 'members', 'dis'],
     data() {
         return {
             topSelection: null,

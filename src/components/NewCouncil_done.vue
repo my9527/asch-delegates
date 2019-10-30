@@ -31,7 +31,7 @@
                 <span>余额:{{accountRest | clacNum}}</span>
             </div>
             <div>
-                <q-btn color="primary" @click="showStartModal">发起交易</q-btn>
+                <q-btn :disable="dis || cAddress|shouldDisable(members, councilInfo)" color="primary" @click="showStartModal">发起交易</q-btn>
             </div>
         </div>
         <q-tabs
@@ -63,7 +63,7 @@
             >
             <template v-slot:body-cell-operation="props">
                 <q-td :props="props">
-                    <q-btn color="primary" :disable="props|shouldDisable(members, councilInfo)"  class="pointer" @click="sign(props)">签名</q-btn>
+                    <q-btn color="primary" :disable="dis || props|shouldDisable(members, councilInfo)"  class="pointer" @click="sign(props)">签名</q-btn>
                 </q-td>
             </template>
             <template v-slot:body-cell-remarks="props">
@@ -104,10 +104,11 @@ const sleep = (delay = 1000) => new Promise(resolve=> {
 })
 const START_TIME = new Date(Date.UTC(2016, 5, 27, 20, 0, 0, 0)).getTime()
 export default {
-    props: ['councilInfo', 'members'],
+    props: ['councilInfo', 'members', 'dis'],
 
     data() {
         return {
+            hasPlugin: true, 
             pendingPagination: {
                 page: 1,
                 rowsPerPage: 10,
@@ -194,8 +195,10 @@ export default {
             return this.$asch.AschWeb.Utils.getTime(tim)
         },
         shouldDisable: (props, members, info) => {
-            const { row } = props
-            const { recipient } = row
+            
+            window.aschPay = window.aschPay || { defaultAccount: {
+                address: '___no___'
+            } }
             const defaultAddress = window.aschPay.defaultAccount.address
             return info.status === 0 || !(members.some(v => v.address === defaultAddress))
         },
@@ -228,6 +231,7 @@ export default {
             })
             this.getRestAmount()
         },
+        
         async getCurHeight() {
             const { height } = await this.$api.getBlockHeight()
              const { block } = await this.$api.getBlockDetail(height)
