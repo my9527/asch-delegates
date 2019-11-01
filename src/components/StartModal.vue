@@ -65,8 +65,8 @@ export default {
       },
 
       validatorAmount(val) {
-          if(!/^(\+|\-)?[0-9]+(\.?[0-9]*)?$/.test(val)){
-              return '请输入正确的数字'
+          if(!/^(\+|\-)?[0-9]+(\.?[0-9]{0,8})?$/.test(val)){
+              return '请输入正确的数字,最大支持8位小数'
           }
           return true
       },

@@ -96,8 +96,11 @@
 
 
 <script>
-import { formatTime } from '../utils/index'
+import { formatTime, xasToPrecision } from '../utils/index'
 import StartModalVue from './StartModal.vue'
+const _xasToPrecision = (num) => {
+    return xasToPrecision(num).toFixed(8)
+}
 
 const sleep = (delay = 1000) => new Promise(resolve=> {
     setTimeout(resolve, delay)
@@ -146,7 +149,7 @@ export default {
                 name: 'amount',
                 required: true,
                 label: '数额',
-                field: 'amount'
+                field: row => _xasToPrecision(row.amount),
              },{
                 name: 'address',
                 required: true,
@@ -176,7 +179,7 @@ export default {
              }, {
                  name: 'amount',
                  label: '数额',
-                  field: 'amount',
+                  field: row => _xasToPrecision(row.amount),
              },{
                 name: 'address',
                 required: true,
@@ -198,7 +201,7 @@ export default {
             return str.slice(0, 1).toUpperCase()
         },
         clacNum: (num) => {
-            return num * 1e-8
+            return xasToPrecision(num)
         },
         formatT: (tim) => {
             return this.$asch.AschWeb.Utils.getTime(tim)
@@ -305,16 +308,20 @@ export default {
                     const {success, error} = await this.$asch.signedForCouncil({
                         type: 702,
                         fee: 100000000000,
-                        args: [address, amount, 'XAS', remarks, 0],
+                        args: [address, amount * 1e8, 'XAS', remarks, 0],
 
                     })
                     if(success) {
                         this.message('操作成功')
                         await sleep(3000)
                         if(this.type === 'to') {
-                            this.getPendingList({ page: this.pendingPagination.page})
+                            this.getPendingList({ pagination: {
+                                page: this.pendingPagination.page
+                            } })
                         } else {
-                            this.getHisList({ page: this.hisPagination.page })
+                            this.getHisList({ pagination: {
+                                page: this.hisPagination.page
+                            } })
                         }
                     } else {
                         this.message(error || '操作失败', 'error')
