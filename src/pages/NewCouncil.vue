@@ -147,7 +147,6 @@ export default {
             try{
                 const {success, councilInfo} = await this.$api.getCouncilInfo()
                 if(success){
-                    councilInfo.status = 0
                     this.councilInfo = councilInfo
                 }
             } catch(e) {
