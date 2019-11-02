@@ -20,7 +20,7 @@
           </div>
       </q-card-section>
       <q-card-actions align="right">
-        <q-btn ghost color="primary" label="Cancel" @click="onCancelClick" />
+        <q-btn flat color="primary" label="Cancel" @click="onCancelClick" />
         <q-btn color="primary" label="OK" @click="onOKClick" />
       </q-card-actions>
     </q-card>

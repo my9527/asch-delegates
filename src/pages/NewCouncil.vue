@@ -147,6 +147,7 @@ export default {
             try{
                 const {success, councilInfo} = await this.$api.getCouncilInfo()
                 if(success){
+                    councilInfo.status = 0
                     this.councilInfo = councilInfo
                 }
             } catch(e) {
@@ -159,7 +160,10 @@ export default {
             try {
                 const { success, count, members } = await this.$api.getCouncilMember()
                 if(success){
-                    this.councilMembers = [...(members || [] )]
+                    this.councilMembers = [...(members || [] )].map((val, indx) => {
+                        val.index = indx+1
+                        return val
+                    })
                 }
 
             } catch(e) {

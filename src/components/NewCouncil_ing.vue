@@ -57,7 +57,7 @@ export default {
                 required: true,
                 label: '排名',
                 align: 'left',
-                field: row => row.name,
+                field: 'index'
                 
                 },
                 { name: 'name', align: 'center', label: '名称', field: 'name', sortable: true },
