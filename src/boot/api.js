@@ -6,8 +6,8 @@ import global from '../utils/global'
 class ExplorerAPI {
   constructor() {
     const host = window.location.host
-    // let baseURL = 'http://localhost:5096'
-    let baseURL = 'http://testnet.asch.io'
+    let baseURL = 'http://localhost:5096'
+    // let baseURL = 'http://testnet.asch.io'
 
     if (/localhost/.test(host)) {
       global.enableLog()
