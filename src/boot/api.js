@@ -6,7 +6,7 @@ import global from '../utils/global'
 class ExplorerAPI {
   constructor() {
     const host = window.location.host
-    let baseURL = 'http://47.52.45.101:5096'
+    let baseURL = 'http://localhost:5096'
     // let baseURL = 'http://testnet.asch.io'
 
     if (/localhost/.test(host)) {
