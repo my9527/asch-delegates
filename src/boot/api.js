@@ -2,7 +2,6 @@ import axios from 'axios'
 import global from '../utils/global'
 
 
-const testUrl = 'http://47.52.45.101:5096'
 
 class ExplorerAPI {
   constructor() {
@@ -87,17 +86,17 @@ class ExplorerAPI {
 
   // 获取领事会选举概况
   async getCouncilInfo() {
-    return this.get(testUrl + '/api/v2/council/info')
+    return this.get('/api/v2/council/info')
   }
 
   // 理事会成员列表
   async getCouncilMember() {
-    return this.get(testUrl + '/api/v2/council/members')
+    return this.get('/api/v2/council/members')
   }
 
   // 待支出列表
   async getPendingList({offset, limit}) {
-    return this.get( testUrl +'/api/v2/council/payments', {
+    return this.get('/api/v2/council/payments', {
       orderBy: 'timestamp:desc',
       pending: 1,
       offset, 
@@ -107,7 +106,7 @@ class ExplorerAPI {
 
   // 理事会资金明细
   async getFinanceRecords({offset, limit}) {
-    return this.get(testUrl + '/api/v2/council/payments', {
+    return this.get('/api/v2/council/payments', {
       orderBy: 'timestamp:desc',
       offset, 
       limit
@@ -117,7 +116,7 @@ class ExplorerAPI {
 
   // 支出款项详情
   async getPendingPaymentDetail(id) {
-    return this.get(testUrl + '/api/v2/council/payments', {
+    return this.get('/api/v2/council/payments', {
       id,
       orderBy: 'timestamp:desc'
     })
@@ -125,7 +124,7 @@ class ExplorerAPI {
 
   // 账户余额
   async getRestAmount(address) {
-    return this.get(testUrl + '/api/v2/accounts/' + address)
+    return this.get( '/api/v2/accounts/' + address)
   }
 
   // private methods
